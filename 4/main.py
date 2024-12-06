@@ -29,13 +29,10 @@ class Coord:
     def __sub__(self: Coord, other: Coord) -> Coord:
         return Coord(self.x - other.x, self.y - other.y)
 
-    def pt_2_pair(self: Coord) -> Coord:
-        return Coord(0 - self.x, self.y)
-
 
 DIRECTIONS = [Coord(x, y) for x in range(-1, 2) for y in range(-1, 2)]
 
-DIRECTIONS2 = [Coord(x, y) for x in range(-1, 2, 2) for y in range(-1, 2, 2)]
+DIRECTIONS2 = [Coord(1, 1), Coord(1, -1)]
 
 
 def parse_inp(inp: str) -> dict[Coord, str]:
@@ -47,39 +44,32 @@ def parse_inp(inp: str) -> dict[Coord, str]:
 
 
 def pt1(inp: str) -> int:
+    def direction_contains_xmas(centre: Coord, d: Coord) -> bool:
+        for letter in 'MAS':
+            centre = centre + d
+            if centre not in grid or grid[centre] != letter:
+                return False
+        return True
+
     grid = parse_inp(inp)
-    acc = 0
-    for key in grid:
-        if grid[key] == 'X':
-            for d in DIRECTIONS:
-                next_1 = key + d
-                if next_1 in grid and grid[next_1] == 'M':
-                    next_2 = next_1 + d
-                    if next_2 in grid and grid[next_2] == 'A':
-                        next_3 = next_2 + d
-                        if next_3 in grid and grid[next_3] == 'S':
-                            acc += 1
-    return acc
+    return len([key for key in grid if grid[key] == 'X' for d in DIRECTIONS if direction_contains_xmas(key, d)])
 
 
 def pt2(inp: str) -> int:
     grid = parse_inp(inp)
     acc = 0
-    for key in grid:
-        if grid[key] == 'A':
-            for d in DIRECTIONS2:
-                a = key + d
-                b = key - d
-                if (a in grid and grid[a] == 'M' and b in grid and grid[b] == 'S') or (
-                    a in grid and grid[a] == 'S' and b in grid and grid[b] == 'M'
-                ):
-                    a1 = key + d.pt_2_pair()
-                    a2 = key - d.pt_2_pair()
-                    if (a1 in grid and grid[a1] == 'M' and a2 in grid and grid[a2] == 'S') or (
-                        a1 in grid and grid[a1] == 'S' and a2 in grid and grid[a2] == 'M'
-                    ):
-                        acc += 1
-    return acc / 4
+    for k in grid:
+        if grid[k] == 'A':
+            d1, d2 = DIRECTIONS2
+            if (
+                (k + d1 in grid and grid[k + d1] == 'M' and k - d1 in grid and grid[k - d1] == 'S')
+                or (k + d1 in grid and grid[k + d1] == 'S' and k - d1 in grid and grid[k - d1] == 'M')
+            ) and (
+                (k + d2 in grid and grid[k + d2] == 'M' and k - d2 in grid and grid[k - d2] == 'S')
+                or (k + d2 in grid and grid[k + d2] == 'S' and k - d2 in grid and grid[k - d2] == 'M')
+            ):
+                acc += 1
+    return acc
 
 
 assert pt1(test_inp) == 18
