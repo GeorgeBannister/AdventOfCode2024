@@ -1,0 +1,22 @@
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint]
+ignore = [
+  "D",    # pydocstyle
+  "S",    # flake8-bandit
+  "TD",   # flake8-todos
+  "FIX",  # flake8-fixme
+  "E501",
+  "INP",
+  "T201",
+]
+select = ["ALL"]
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "single"
