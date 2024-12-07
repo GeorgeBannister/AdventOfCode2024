@@ -1,5 +1,3 @@
-import functools
-import itertools
 import operator
 import re
 from pathlib import Path
@@ -19,8 +17,10 @@ inp = (Path(__file__).parent / 'inp.txt').read_text()
 
 all_nums_re = re.compile(r'\d+')
 
+type Row = tuple[int, list[int]]
 
-def parse_inp(inp: str) -> list[tuple[int, list[int]]]:
+
+def parse_inp(inp: str) -> list[Row]:
     acc = []
     for line in inp.splitlines():
         nums = [int(x) for x in all_nums_re.findall(line)]
@@ -34,20 +34,18 @@ def special_operator(a: int, b: int) -> int:
     return int(str(a) + str(b))
 
 
-def score_from_row(l: tuple[int, list[int]], operators: list) -> int:
+def score_from_row(l: Row, operators: list) -> int:
     lhs, rhs = l
     queue = [(rhs[0], rhs[1:])]
     while queue:
         acc, rs = queue.pop(0)
         for op in operators:
             acc2 = acc
-            rs2 = list(rs)
-            n = rs2.pop(0)
-            acc2 = op(acc2, n)
-            if acc2 == lhs and not rs2:
+            acc2 = op(acc2, rs[0])
+            if acc2 == lhs and len(rs) == 1:
                 return lhs
-            if acc2 <= lhs and rs2:
-                queue.append((acc2, rs2))
+            if acc2 <= lhs and len(rs) > 1:
+                queue.append((acc2, rs[1:]))
     return 0
 
 
