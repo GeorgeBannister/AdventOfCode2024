@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Collection, Generator
+    from collections.abc import Collection, Iterator
 
 test_inp = """\
 89010123
@@ -28,14 +28,8 @@ class Coord:
     def __add__(self: Coord, other: Coord) -> Coord:
         return Coord(self.x + other.x, self.y + other.y)
 
-    def __sub__(self: Coord, other: Coord) -> Coord:
-        return Coord(self.x - other.x, self.y - other.y)
-
-    def adjacent(self: Coord, valid: Collection[Coord]) -> Generator[Coord, None, None]:
-        for delta in (Coord(0, 1), Coord(1, 0), Coord(0, -1), Coord(-1, 0)):
-            shadow = self + delta
-            if shadow in valid:
-                yield shadow
+    def adjacent(self: Coord, valid: Collection[Coord]) -> Iterator[Coord]:
+        yield from (self + d for d in (Coord(0, 1), Coord(1, 0), Coord(0, -1), Coord(-1, 0)) if self + d in valid)
 
 
 type Trailheads = list[Coord]
@@ -48,10 +42,9 @@ def parse_inp(inp: str) -> tuple[Grid, Trailheads]:
     for y, row in enumerate(inp.splitlines()):
         for x, char in enumerate(row):
             co = Coord(x, y)
-            i = int(char)
-            if i == 0:
+            if char == '0':
                 trailheads.append(co)
-            grid[co] = i
+            grid[co] = int(char)
     return grid, trailheads
 
 
@@ -59,31 +52,23 @@ def valid_routes(trailhead: Coord, grid: Grid, pt_2=False) -> int:
     acc = 0
     queue = [x for x in trailhead.adjacent(grid) if grid[x] == 1]
     while queue:
-        this_co = queue.pop(0)
-        this_val = grid[this_co]
-        if this_val == 9:
+        co = queue.pop(0)
+        num = grid[co]
+        if num == 9:
             acc += 1
             continue
-        for adj in this_co.adjacent(grid):
-            if grid[adj] == this_val + 1 and (pt_2 is True or adj not in queue):
-                queue.append(adj)
+        queue.extend([adj for adj in co.adjacent(grid) if grid[adj] == num + 1 and (pt_2 is True or adj not in queue)])
     return acc
 
 
 def pt1(inp: str) -> int:
-    acc = 0
     grid, trailheads = parse_inp(inp)
-    for trailhead in trailheads:
-        acc += valid_routes(trailhead, grid)
-    return acc
+    return sum(valid_routes(t, grid) for t in trailheads)
 
 
 def pt2(inp: str) -> int:
-    acc = 0
     grid, trailheads = parse_inp(inp)
-    for trailhead in trailheads:
-        acc += valid_routes(trailhead, grid, pt_2=True)
-    return acc
+    return sum(valid_routes(t, grid, pt_2=True) for t in trailheads)
 
 
 assert pt1(test_inp) == 36
