@@ -17,16 +17,6 @@ test_inp = """\
 01329801
 10456732"""
 
-test_inp_2 = """\
-89010123
-78121874
-87430965
-96549874
-45678903
-32019012
-01329801
-10456732"""
-
 inp = (Path(__file__).parent / 'inp.txt').read_text()
 
 
@@ -98,5 +88,5 @@ def pt2(inp: str) -> int:
 
 assert pt1(test_inp) == 36
 print(f'{pt1(inp) = }')
-assert pt2(test_inp_2) == 81
+assert pt2(test_inp) == 81
 print(f'{pt2(inp) = }')
