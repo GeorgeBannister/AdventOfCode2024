@@ -1,8 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Collection, Generator
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Collection, Generator
 
 test_inp = """\
 89010123
@@ -82,7 +85,6 @@ def pt1(inp: str) -> int:
     grid, trailheads = parse_inp(inp)
     for trailhead in trailheads:
         acc += valid_routes(trailhead, grid)
-    print(f'{acc = }')
     return acc
 
 
@@ -91,7 +93,6 @@ def pt2(inp: str) -> int:
     grid, trailheads = parse_inp(inp)
     for trailhead in trailheads:
         acc += valid_routes(trailhead, grid, pt_2=True)
-    print(f'{acc = }')
     return acc
 
 
