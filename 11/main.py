@@ -26,20 +26,15 @@ def n_child(inp: int, n_steps_left: int) -> int:
 
 
 def n_steps(stones: Stones, steps: int) -> int:
-    acc = 0
-    for val in stones:
-        acc += n_child(val, steps)
-    return acc
+    return sum(n_child(stone, steps) for stone in stones)
 
 
 def pt1(inp: str) -> int:
-    stones = parse_inp(inp)
-    return n_steps(stones, 25)
+    return n_steps(parse_inp(inp), 25)
 
 
 def pt2(inp: str) -> int:
-    stones = parse_inp(inp)
-    return n_steps(stones, 75)
+    return n_steps(parse_inp(inp), 75)
 
 
 assert pt1(test_inp) == 55312
