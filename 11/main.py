@@ -13,16 +13,16 @@ def parse_inp(inp: str) -> Stones:
 
 
 @functools.cache
-def n_child(inp: int, n_steps_left: int) -> int:
-    if n_steps_left == 0:
+def n_child(inp: int, steps: int) -> int:
+    if steps == 0:
         return 1
     s = str(inp)
     l = len(s)
     if inp == 0:
-        return n_child(1, n_steps_left - 1)
+        return n_child(1, steps - 1)
     if l % 2 == 0:
-        return n_child(int(s[: (l // 2)]), n_steps_left - 1) + n_child(int(s[(l // 2) :]), n_steps_left - 1)
-    return n_child(inp * 2024, n_steps_left - 1)
+        return n_child(int(s[: l // 2]), steps - 1) + n_child(int(s[l // 2 :]), steps - 1)
+    return n_child(inp * 2024, steps - 1)
 
 
 def n_steps(stones: Stones, steps: int) -> int:
@@ -38,6 +38,5 @@ def pt2(inp: str) -> int:
 
 
 assert pt1(test_inp) == 55312
-print('A1')
 print(f'{pt1(inp) = }')
 print(f'{pt2(inp) = }')
