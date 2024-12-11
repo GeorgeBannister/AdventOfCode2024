@@ -4,3 +4,4 @@ dist/
 *.egg-info/
 __pycache__/
 **/inp.txt
+.SESSION

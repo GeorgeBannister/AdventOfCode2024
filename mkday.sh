@@ -5,4 +5,4 @@ set -eux
 mkdir $1
 
 cp template.py $1/main.py
-touch $1/inp.txt
+curl --cookie "session=$(cat .SESSION)" "https://adventofcode.com/2024/day/$1/input" > "$1/inp.txt"
