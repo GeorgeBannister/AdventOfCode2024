@@ -58,6 +58,16 @@ def get_score(robots: list[Robot], width: int, height: int) -> int:
     return reduce(lambda a, b: a * b, acc, 1)
 
 
+def print_grid(robots: list[Robot], width: int, height: int) -> None:
+    for y in range(height):
+        for x in range(width):
+            if any(r for r in robots if r.p_x == x and r.p_y == y):
+                print('\033[041mX\033[0m', end='')
+            else:
+                print('.', end='')
+        print()
+
+
 def pt1(inp: str, width: int = 101, height: int = 103) -> int:
     robots = parse_inp(inp)
 
@@ -68,11 +78,21 @@ def pt1(inp: str, width: int = 101, height: int = 103) -> int:
     return get_score(robots, width, height)
 
 
-def pt2(inp: str) -> int:
-    return 0
+def pt2(inp: str, width: int = 101, height: int = 103) -> int:
+    robots = parse_inp(inp)
+
+    steps = 0
+
+    while True:
+        steps += 1
+        print(f'{steps = }')
+        for robot in robots:
+            robot.step(width, height)
+
+        print_grid(robots, width, height)
+        input()
 
 
 assert pt1(test_inp, 11, 7) == 12
 print(f'{pt1(inp) = }')
-assert pt2(test_inp) == 0
 print(f'{pt2(inp) = }')
