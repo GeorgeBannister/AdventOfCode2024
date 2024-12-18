@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from pprint import pprint
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -70,13 +69,8 @@ def pt1(inp: str, end: Coord, n: int) -> int:
     start = Coord(0, 0)
     grid = parse_inp(inp, end, n)
     visited = {start}
-
-    pprint(grid)
-
     steps = 0
-
     bfs = [start]
-
     while True:
         steps += 1
         new_bfs = []
@@ -87,7 +81,6 @@ def pt1(inp: str, end: Coord, n: int) -> int:
                         return steps
                     visited.add(adj)
                     new_bfs.append(adj)
-
         bfs = new_bfs
 
 
@@ -96,20 +89,12 @@ class BreakOut(Exception): ...
 
 def pt2(inp: str, end: Coord) -> str:
     acc = 1
-
     start = Coord(0, 0)
-
     while True:
         acc += 1
-
-        print(acc)
-
         grid = parse_inp(inp, end, acc)
-
         visited = {start}
-
         bfs = [start]
-
         try:
             while True:
                 new_bfs = []
@@ -120,10 +105,8 @@ def pt2(inp: str, end: Coord) -> str:
                                 raise BreakOut
                             visited.add(adj)
                             new_bfs.append(adj)
-
                 if not new_bfs:
                     return inp.splitlines()[acc - 1]
-
                 bfs = new_bfs
         except BreakOut:
             ...
